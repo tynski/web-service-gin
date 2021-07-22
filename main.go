@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,16 +17,24 @@ type album struct {
 	Price  float64 `json:"price"`
 }
 
-// albums slice to seed record album data.
-var albums = []album{
-	{ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
-	{ID: "2", Title: "Jeru", Artist: "Gerry Muligan", Price: 17.99},
-	{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
+var dupa = loadAlbums()
+
+// Return albums slice with opened albums.json.
+func loadAlbums() []album {
+	var albums = []album{}
+
+	jsonFile, _ := os.Open("albums.json")
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	defer jsonFile.Close()
+
+	json.Unmarshal(byteValue, &albums)
+
+	return albums
 }
 
 // getAlbums responds with the list of all albums as JSON.
 func getAlbums(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, albums)
+	c.IndentedJSON(http.StatusOK, dupa)
 }
 
 // post Albums adds an album from JSON received in the request body.
@@ -37,7 +48,7 @@ func postAlbums(c *gin.Context) {
 	}
 
 	// Add the new album to the slice.
-	albums = append(albums, newAlbum)
+	dupa = append(dupa, newAlbum)
 	c.IndentedJSON(http.StatusCreated, newAlbum)
 }
 
@@ -48,7 +59,7 @@ func getAlbumByID(c *gin.Context) {
 
 	// Loop over the list of albums, looking for
 	// an album whose ID value matches the parameter.
-	for _, a := range albums {
+	for _, a := range dupa {
 		if a.ID == id {
 			c.IndentedJSON(http.StatusOK, a)
 			return
