@@ -1,16 +1,21 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-var dupa = LoadAlbums()
-
 // getAlbums responds with the list of all albums as JSON.
 func getAlbums(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, dupa)
+	albums, err := GetAlbums()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.IndentedJSON(http.StatusOK, albums)
 }
 
 // post Albums adds an album from JSON received in the request body.
@@ -23,8 +28,13 @@ func postAlbums(c *gin.Context) {
 		return
 	}
 
-	// Add the new album to the slice.
-	dupa = append(dupa, newAlbum)
+	// Add the new album to the albums.json.
+	err := AddAlbum(newAlbum)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	c.IndentedJSON(http.StatusCreated, newAlbum)
 }
 
@@ -32,15 +42,17 @@ func postAlbums(c *gin.Context) {
 // parameter sent by the client, then returns that album as a response
 func getAlbumByID(c *gin.Context) {
 	id := c.Param("id")
+	a, err := GetAlbum(id)
 
-	// Loop over the list of albums, looking for
-	// an album whose ID value matches the parameter.
-	for _, a := range dupa {
-		if a.ID == id {
-			c.IndentedJSON(http.StatusOK, a)
-			return
-		}
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	if a != nil {
+		c.IndentedJSON(http.StatusOK, a)
+		return
+	}
+
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 }
 
