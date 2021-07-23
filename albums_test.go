@@ -1,13 +1,15 @@
 package main
 
 import (
-	"fmt"
+	"regexp"
 	"testing"
 )
 
-func TestLoadAlbums(t *testing.T) {
-	dupa, _ := GetAlbums()
-	for i := 0; i < len(dupa); i++ {
-		fmt.Println(dupa[i].Title)
+func TestGetAlbums(t *testing.T) {
+	albums, err := GetAlbums()
+	got := albums[0].Title
+	want := regexp.MustCompile("Blue Train")
+	if !want.MatchString(got) || err != nil {
+		t.Fatalf("Title: %q, want 'Blue Train'", got)
 	}
 }

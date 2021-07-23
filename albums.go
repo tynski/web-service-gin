@@ -44,8 +44,9 @@ func checkFile(filename string) error {
 
 	if os.IsNotExist(err) {
 		_, err := os.Create(filename)
+
 		if err != nil {
-			return nil
+			return err
 		}
 	}
 
