@@ -16,15 +16,21 @@ type album struct {
 
 var fileName = "albums.json"
 
-// Return albums slice with opened albums.json.
+// Return albums slice from albums.json file.
 func GetAlbums() ([]album, error) {
+	err := checkFile(fileName)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var albums []album
 
 	jsonFile, _ := os.Open(fileName)
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	defer jsonFile.Close()
 
-	err := json.Unmarshal(byteValue, &albums)
+	err = json.Unmarshal(byteValue, &albums)
 
 	if err != nil {
 		return nil, err
@@ -33,8 +39,20 @@ func GetAlbums() ([]album, error) {
 	return albums, err
 }
 
-// Loop over the list of albums, looking for
-// an album whose ID value matches the parameter.
+func checkFile(filename string) error {
+	_, err := os.Stat(filename)
+
+	if os.IsNotExist(err) {
+		_, err := os.Create(filename)
+		if err != nil {
+			return nil
+		}
+	}
+
+	return nil
+}
+
+// Return albums with given id.
 func GetAlbum(id string) (*album, error) {
 
 	albums, err := GetAlbums()
@@ -52,6 +70,7 @@ func GetAlbum(id string) (*album, error) {
 	return nil, nil
 }
 
+// Add album to albums.json file
 func AddAlbum(newAlbum album) error {
 	albums, err := GetAlbums()
 
