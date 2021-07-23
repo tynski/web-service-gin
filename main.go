@@ -1,36 +1,12 @@
 package main
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
-// album represents data about a record album.
-type album struct {
-	ID     string  `json:"id"`
-	Title  string  `json:"title"`
-	Artist string  `json:"artist"`
-	Price  float64 `json:"price"`
-}
-
-var dupa = loadAlbums()
-
-// Return albums slice with opened albums.json.
-func loadAlbums() []album {
-	var albums = []album{}
-
-	jsonFile, _ := os.Open("albums.json")
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-	defer jsonFile.Close()
-
-	json.Unmarshal(byteValue, &albums)
-
-	return albums
-}
+var dupa = LoadAlbums()
 
 // getAlbums responds with the list of all albums as JSON.
 func getAlbums(c *gin.Context) {
