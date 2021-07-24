@@ -29,9 +29,7 @@ func postAlbums(c *gin.Context) {
 	}
 
 	// Add the new album to the albums.json.
-	err := AddAlbum(newAlbum)
-
-	if err != nil {
+	if err := AddAlbum(newAlbum); err != nil {
 		log.Fatal(err)
 	}
 
