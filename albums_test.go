@@ -1,15 +1,13 @@
 package main
 
 import (
-	"regexp"
 	"testing"
 )
 
-func TestGetAlbums(t *testing.T) {
-	albums, err := GetAlbums()
-	got := albums[0].Title
-	want := regexp.MustCompile("Blue Train")
-	if !want.MatchString(got) || err != nil {
-		t.Fatalf("Title: %q, want 'Blue Train'", got)
+func TestAddAlbum(t *testing.T) {
+	err := AddAlbum(album{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: "39.99"})
+	if err != nil {
+		t.Fatalf("Error: %v", err)
 	}
 }
+
