@@ -25,7 +25,7 @@ func postAlbums(c *gin.Context) {
 	// Call BinsJSON to bind the received JSON to
 	// newAlbum.
 	if err := c.BindJSON(&newAlbum); err != nil {
-		return
+		log.Fatal(err)
 	}
 
 	// Add the new album to the albums.json.
