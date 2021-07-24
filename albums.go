@@ -14,13 +14,11 @@ type album struct {
 	Price  string  `json:"price"`
 }
 
-var fileName = "albums.json"
+const fileName = "albums.json"
 
 // Return albums slice from albums.json file.
 func GetAlbums() ([]album, error) {
-	err := checkFile(fileName)
-
-	if err != nil {
+	if err := checkFile(fileName); err != nil {
 		return nil, err
 	}
 
@@ -30,15 +28,14 @@ func GetAlbums() ([]album, error) {
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	defer jsonFile.Close()
 
-	err = json.Unmarshal(byteValue, &albums)
-
-	if err != nil {
+	if err = json.Unmarshal(byteValue, &albums); err != nil {
 		return nil, err
 	}
 
-	return albums, err
+	return albums, nil
 }
 
+// Check if file exsits, if not create it.
 func checkFile(filename string) error {
 	_, err := os.Stat(filename)
 
@@ -55,7 +52,6 @@ func checkFile(filename string) error {
 
 // Return albums with given id.
 func GetAlbum(id string) (*album, error) {
-
 	albums, err := GetAlbums()
 
 	if err != nil {
@@ -71,12 +67,16 @@ func GetAlbum(id string) (*album, error) {
 	return nil, nil
 }
 
-// Add album to albums.json file
+// Add album to albums.json file.
 func AddAlbum(newAlbum album) error {
 	albums, err := GetAlbums()
 
 	if err != nil {
 		return err
+	}
+
+	if isUnique(newAlbum.ID, albums) == false {
+		return nil
 	}
 
 	albums = append(albums, newAlbum)
@@ -94,4 +94,14 @@ func AddAlbum(newAlbum album) error {
 	}
 
 	return nil
+}
+
+// Check if ID is unique.
+func isUnique(id string, albums []album) bool {
+	for _, a := range albums {
+		if a.ID == id {
+			return false
+		}
+	}
+	return true
 }
