@@ -28,7 +28,7 @@ func GetAlbums() ([]album, error) {
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	defer jsonFile.Close()
 
-	if err = json.Unmarshal(byteValue, &albums); err != nil {
+	if err := json.Unmarshal(byteValue, &albums); err != nil {
 		return nil, err
 	}
 
