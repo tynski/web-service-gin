@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"log"
 )
 
 // album represents data about a record album.
@@ -68,15 +69,15 @@ func GetAlbum(id string) (*album, error) {
 }
 
 // Add album to albums.json file.
-func AddAlbum(newAlbum album) error {
+func AddAlbum(newAlbum album) bool {
 	albums, err := GetAlbums()
 
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 
 	if isUnique(newAlbum.ID, albums) == false {
-		return nil
+		return false
 	}
 
 	albums = append(albums, newAlbum)
@@ -84,16 +85,14 @@ func AddAlbum(newAlbum album) error {
 	result, err := json.Marshal(albums)
 
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 
-	err = ioutil.WriteFile(fileName, result, 0644)
-
-	if err != nil {
-		return err
+	if err:= ioutil.WriteFile(fileName, result, 0644); err != nil {
+		log.Fatal(err)
 	}
 
-	return nil
+	return true
 }
 
 // Check if ID is unique.

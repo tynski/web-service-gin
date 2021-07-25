@@ -29,8 +29,9 @@ func postAlbums(c *gin.Context) {
 	}
 
 	// Add the new album to the albums.json.
-	if err := AddAlbum(newAlbum); err != nil {
-		log.Fatal(err)
+	if result := AddAlbum(newAlbum); result == false {
+		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"message": "ID not avaible"})
+		return
 	}
 
 	c.IndentedJSON(http.StatusCreated, newAlbum)
