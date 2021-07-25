@@ -42,11 +42,7 @@ func postAlbums(c *gin.Context) {
 // parameter sent by the client, then returns that album as a response
 func getAlbumByID(c *gin.Context) {
 	id := c.Param("id")
-	a, err := GetAlbum(id)
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	a := GetAlbum(id)
 
 	if a != nil {
 		c.IndentedJSON(http.StatusOK, a)

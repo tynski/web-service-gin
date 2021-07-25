@@ -52,20 +52,20 @@ func checkFile(filename string) error {
 }
 
 // Return albums with given id.
-func GetAlbum(id string) (*album, error) {
-	albums, err := GetAlbums()
+func GetAlbum(id string) *album {
+	albums:= GetAlbums()
 
-	if err != nil {
-		return nil, err
+	if albums != nil {
+		return nil
 	}
 
 	for _, a := range albums {
 		if a.ID == id {
-			return &a, nil
+			return &a
 		}
 	}
 
-	return nil, nil
+	return nil
 }
 
 // Add album to albums.json file.
