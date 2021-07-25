@@ -26,7 +26,7 @@ func postAlbums(c *gin.Context) {
 	// Call BinsJSON to bind the received JSON to
 	// newAlbum.
 	if err := c.BindJSON(&newAlbum); err != nil {
-		log.Fatal(err)
+		return
 	}
 
 	// Add the new album to the albums.json.
@@ -57,6 +57,8 @@ func main() {
 	router.GET("/albums", getAlbums)
 	router.GET("/albums/:id", getAlbumByID)
 	router.POST("/albums", postAlbums)
-
+	//TODO
+	//router.PUT("/albums/:id", updateAlbumByID)
+	//router.DELETE("/albums/:id", deleteAlbumByID)
 	router.Run("localhost:8080")
 }
