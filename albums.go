@@ -18,9 +18,9 @@ type album struct {
 const fileName = "albums.json"
 
 // Return albums slice from albums.json file.
-func GetAlbums() ([]album, error) {
+func GetAlbums() []album {
 	if err := checkFile(fileName); err != nil {
-		return nil, err
+		return nil
 	}
 
 	var albums []album
@@ -30,10 +30,10 @@ func GetAlbums() ([]album, error) {
 	defer jsonFile.Close()
 
 	if err := json.Unmarshal(byteValue, &albums); err != nil {
-		return nil, err
+		return nil
 	}
 
-	return albums, nil
+	return albums
 }
 
 // Check if file exsits, if not create it.

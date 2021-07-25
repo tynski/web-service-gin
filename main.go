@@ -9,10 +9,11 @@ import (
 
 // getAlbums responds with the list of all albums as JSON.
 func getAlbums(c *gin.Context) {
-	albums, err := GetAlbums()
+	albums := GetAlbums()
 
-	if err != nil {
-		log.Fatal(err)
+	if albums == nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Can not obtain list of albums"})
+		return
 	}
 
 	c.IndentedJSON(http.StatusOK, albums)
